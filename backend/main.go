@@ -113,6 +113,7 @@ func online() {
 					break
 				}
 				fmt.Print("+")
+				time.Sleep(4 * time.Second)
 			} else {
 				_, err := clubhouseapi.ActivePing(channel.Channel)
 				if err != nil {
@@ -120,10 +121,9 @@ func online() {
 					break
 				}
 				fmt.Print(".")
+				time.Sleep(2 * time.Second)
 			}
-			time.Sleep(2 * time.Second)
 		}
-		time.Sleep(2 * time.Second)
 	}
 }
 
