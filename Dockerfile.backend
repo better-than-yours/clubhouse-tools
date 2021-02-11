@@ -1,0 +1,21 @@
+FROM golang:alpine as build-backend
+
+ARG VERSION
+ENV GOOS linux
+ARG GOARCH
+ENV GOARCH $GOARCH
+ARG GOARM
+ENV GOARM $GOARM
+
+RUN apk update && apk --no-cache add ca-certificates && update-ca-certificates
+COPY backend /srv/backend
+RUN cd /srv/backend && \
+    go build -o app -ldflags "-X main.revision=${VERSION} -s -w" .
+
+FROM scratch
+
+COPY --from=build-backend /etc/ssl/certs/ca-certificates.crt /etc/ssl/certs/
+COPY --from=build-backend /srv/backend/app /srv/app
+WORKDIR /srv
+
+CMD ["/srv/app"]
