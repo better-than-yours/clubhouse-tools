@@ -91,6 +91,16 @@ func autoRefresh() {
 func online() {
 	_ = godotenv.Load()
 	refresh()
+	for {
+		time.Sleep(60 * time.Second)
+		refresh()
+		fmt.Print("@")
+	}
+}
+
+func joinEveryRoom() {
+	_ = godotenv.Load()
+	refresh()
 	go autoRefresh()
 
 	for {
@@ -128,7 +138,7 @@ func online() {
 }
 
 func main() {
-	actionPtr := flag.String("action", "", "example: login, auth, online")
+	actionPtr := flag.String("action", "", "example: login, auth, online, join-every-room")
 	verificationCodePtr := flag.String("verificationCode", "", "verification code")
 	flag.Parse()
 
@@ -139,5 +149,7 @@ func main() {
 		auth(*verificationCodePtr)
 	case "online":
 		online()
+	case "join-every-room":
+		joinEveryRoom()
 	}
 }
