@@ -12,10 +12,10 @@ COPY backend /srv/backend
 RUN cd /srv/backend && \
     go build -o app -ldflags "-X main.revision=${VERSION} -s -w" .
 
-FROM scratch
+FROM alpine
 
 COPY --from=build-backend /etc/ssl/certs/ca-certificates.crt /etc/ssl/certs/
 COPY --from=build-backend /srv/backend/app /srv/app
 WORKDIR /srv
 
-CMD ["/srv/app"]
+ENTRYPOINT ["/srv/app"]
