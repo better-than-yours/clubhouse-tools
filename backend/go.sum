@@ -2,5 +2,7 @@ github.com/joho/godotenv v1.3.0 h1:Zjp+RcGpHhGlrMbJzXTrZZPrWj+1vfm90La1wgB6Bhc=
 github.com/joho/godotenv v1.3.0/go.mod h1:7hK45KPybAkOC6peb+G5yklZfMxEjkZhHbwpqxOKXbg=
 github.com/lafin/clubhouseapi v0.0.5 h1:ckAM99fhpR/5UhSda0bpgJpmyJ+Hu17ni3OlXM8EC0I=
 github.com/lafin/clubhouseapi v0.0.5/go.mod h1:al8TvmyR/1XZBBilPxJbAQOm0sbYzJHeO/N0WsbGpd4=
+github.com/lafin/clubhouseapi v0.0.6 h1:oHk3h7EVGtqb1BTnDjjtUpkFLOyZcFMr1JF/TeAf/eE=
+github.com/lafin/clubhouseapi v0.0.6/go.mod h1:al8TvmyR/1XZBBilPxJbAQOm0sbYzJHeO/N0WsbGpd4=
 github.com/lafin/http v0.0.2 h1:u/o6zWaS/rjntIjfcCDD6ZKqHoOjUeFD69mpNegywnY=
 github.com/lafin/http v0.0.2/go.mod h1:jUx111RugC4JlfCQLzHtmBYr0QKOTHrbH43X/O0y+mw=

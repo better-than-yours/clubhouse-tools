@@ -4,5 +4,5 @@ go 1.15
 
 require (
 	github.com/joho/godotenv v1.3.0
-	github.com/lafin/clubhouseapi v0.0.5
+	github.com/lafin/clubhouseapi v0.0.6
 )

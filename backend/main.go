@@ -36,8 +36,7 @@ func auth(verificationCode string) {
 		return
 	}
 	env, _ := godotenv.Read()
-	env["ACCESS_TOKEN"] = response.AccessToken
-	env["REFRESH_TOKEN"] = response.RefreshToken
+	env["AUTH_TOKEN"] = response.AuthToken
 	env["USER_ID"] = strconv.Itoa(response.UserProfile.UserID)
 	_ = godotenv.Write(env, ".env")
 }
@@ -45,22 +44,10 @@ func auth(verificationCode string) {
 func channels() (clubhouseapi.GetChannelsResponse, error) {
 	var credentials = map[string]string{
 		"CH-UserID":     os.Getenv("USER_ID"),
-		"Authorization": fmt.Sprintf(`Bearer %s`, os.Getenv("ACCESS_TOKEN")),
+		"Authorization": fmt.Sprintf(`Token %s`, os.Getenv("AUTH_TOKEN")),
 	}
 	clubhouseapi.AddCredentials(credentials)
 	return clubhouseapi.GetChannels()
-}
-
-func refresh() {
-	response, err := clubhouseapi.RefreshToken(os.Getenv("REFRESH_TOKEN"))
-	if err != nil {
-		log.Fatalln(err.Error())
-		return
-	}
-	env, _ := godotenv.Read()
-	env["ACCESS_TOKEN"] = response.Access
-	env["REFRESH_TOKEN"] = response.Refresh
-	_ = godotenv.Write(env, ".env")
 }
 
 func userIsAlreadyInChannel(channel clubhouseapi.Channel, userID int) bool {
@@ -72,36 +59,8 @@ func userIsAlreadyInChannel(channel clubhouseapi.Channel, userID int) bool {
 	return false
 }
 
-func autoRefresh() {
-	ticker := time.NewTicker(60 * time.Second)
-	quit := make(chan struct{})
-	for {
-		select {
-		case <-ticker.C:
-			refresh()
-			fmt.Print("@")
-			_ = godotenv.Overload()
-		case <-quit:
-			ticker.Stop()
-			return
-		}
-	}
-}
-
-func online() {
-	_ = godotenv.Load()
-	refresh()
-	for {
-		time.Sleep(60 * time.Second)
-		refresh()
-		fmt.Print("@")
-	}
-}
-
 func joinEveryRoom() {
 	_ = godotenv.Load()
-	refresh()
-	go autoRefresh()
 
 	for {
 		response, err := channels()
@@ -138,7 +97,7 @@ func joinEveryRoom() {
 }
 
 func main() {
-	actionPtr := flag.String("action", "", "example: login, auth, online, join-every-room")
+	actionPtr := flag.String("action", "", "example: login, auth, join-every-room")
 	verificationCodePtr := flag.String("verificationCode", "", "verification code")
 	flag.Parse()
 
@@ -147,8 +106,6 @@ func main() {
 		login()
 	case "auth":
 		auth(*verificationCodePtr)
-	case "online":
-		online()
 	case "join-every-room":
 		joinEveryRoom()
 	}
