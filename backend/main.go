@@ -59,15 +59,14 @@ func userIsAlreadyInChannel(channel clubhouseapi.Channel, userID int) bool {
 	return false
 }
 
-func joinEveryRoom() {
+func joinEveryRoom(delay int) {
 	_ = godotenv.Load()
 
 	for {
 		response, err := channels()
 		if err != nil {
 			log.Fatalln(err.Error())
-			time.Sleep(2 * time.Second)
-			continue
+			break
 		}
 		sort.Slice(response.Channels, func(i, j int) bool { return response.Channels[i].NumAll < response.Channels[j].NumAll })
 		for _, channel := range response.Channels {
@@ -82,7 +81,6 @@ func joinEveryRoom() {
 					break
 				}
 				fmt.Print("+")
-				time.Sleep(4 * time.Second)
 			} else {
 				_, err := clubhouseapi.ActivePing(channel.Channel)
 				if err != nil {
@@ -90,8 +88,8 @@ func joinEveryRoom() {
 					break
 				}
 				fmt.Print(".")
-				time.Sleep(2 * time.Second)
 			}
+			time.Sleep(time.Duration(delay) * time.Second)
 		}
 	}
 }
@@ -99,6 +97,7 @@ func joinEveryRoom() {
 func main() {
 	actionPtr := flag.String("action", "", "example: login, auth, join-every-room")
 	verificationCodePtr := flag.String("verificationCode", "", "verification code")
+	delay := flag.Int("delay", 2, "delay between loops")
 	flag.Parse()
 
 	switch *actionPtr {
@@ -107,6 +106,6 @@ func main() {
 	case "auth":
 		auth(*verificationCodePtr)
 	case "join-every-room":
-		joinEveryRoom()
+		joinEveryRoom(*delay)
 	}
 }
